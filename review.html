@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Startups</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .company-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+        form.inline { display: inline-block; margin-right: 10px; }
+        button { padding: 6px 12px; }
+    </style>
+</head>
+<body>
+    <h1>Review & Select Companies to Push to Google Sheets</h1>
+
+    <form method="post" action="/reset" style="margin-bottom: 20px;">
+        <button type="submit">🔙 Back to Form (Start Over)</button>
+    </form>
+
+    {% if logs %}
+    <div style="margin-bottom: 20px; padding: 10px; background: #eef;">
+        <strong>📝 Log:</strong>
+        <ul>
+            {% for log in logs %}
+            <li>{{ log }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% for i, company in companies %}
+    <div class="company-box">
+        <h3>{{ company["Company Name"] or "Unnamed Company" }}</h3>
+        <ul>
+            {% for field in fields %}
+                <li><strong>{{ field }}:</strong> {{ company[field] or "(missing)" }}</li>
+            {% endfor %}
+        </ul>
+        <form class="inline" method="post" action="/approve/{{ i }}">
+            <button type="submit">✅ Push to Google Sheets</button>
+        </form>
+        <form class="inline" method="post" action="/skip/{{ i }}">
+            <button type="submit">❌ Skip</button>
+        </form>
+    </div>
+    {% endfor %}
+</body>
+</html>
